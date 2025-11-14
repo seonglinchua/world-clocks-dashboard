@@ -28,20 +28,20 @@ function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-slate-900 py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
+    <div className="min-h-screen bg-white dark:bg-gray-950 transition-colors duration-300">
       <DarkModeToggle darkMode={darkMode} setDarkMode={setDarkMode} />
 
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-gray-900 dark:text-white mb-4 transition-colors duration-300">
-            🌍 World Clocks Dashboard
+      <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12 py-16">
+        <header className="mb-16">
+          <h1 className="text-4xl font-light text-gray-900 dark:text-gray-100 mb-3 tracking-tight transition-colors duration-300">
+            World Clocks
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 transition-colors duration-300">
-            Monitor time across different time zones in real-time
+          <p className="text-sm text-gray-500 dark:text-gray-400 font-light transition-colors duration-300">
+            Real-time monitoring across time zones
           </p>
-        </div>
+        </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-200 dark:bg-gray-800 border border-gray-200 dark:border-gray-800 transition-colors duration-300">
           {worldClocks.map((clock, index) => (
             <Clock
               key={index}
@@ -50,10 +50,6 @@ function App() {
               offset={clock.offset}
             />
           ))}
-        </div>
-
-        <div className="mt-12 text-center text-gray-500 dark:text-gray-400 text-sm transition-colors duration-300">
-          <p>Built with React.js and Tailwind CSS</p>
         </div>
       </div>
     </div>
