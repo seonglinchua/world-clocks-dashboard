@@ -38,13 +38,13 @@ const Clock = ({ timezone, city, offset }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
-      <h2 className="text-2xl font-bold text-gray-800 mb-2">{city}</h2>
-      <p className="text-sm text-gray-500 mb-4">{timezone}</p>
-      <div className="text-4xl font-mono font-bold text-blue-600 mb-2">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg dark:shadow-gray-900/30 p-6 transform transition-all duration-300 hover:scale-105 hover:shadow-xl dark:hover:shadow-gray-900/50">
+      <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2 transition-colors duration-300">{city}</h2>
+      <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 transition-colors duration-300">{timezone}</p>
+      <div className="text-4xl font-mono font-bold text-blue-600 dark:text-blue-400 mb-2 transition-colors duration-300">
         {formatTime()}
       </div>
-      <p className="text-sm text-gray-600">{formatDate()}</p>
+      <p className="text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">{formatDate()}</p>
     </div>
   );
 };
