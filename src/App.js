@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Clock from './components/Clock';
+import AnalogClock from './components/AnalogClock';
 import DarkModeToggle from './components/DarkModeToggle';
 import './App.css';
 
@@ -7,6 +8,11 @@ function App() {
   const [darkMode, setDarkMode] = useState(() => {
     const savedMode = localStorage.getItem('darkMode');
     return savedMode === 'true';
+  });
+
+  const [activeTab, setActiveTab] = useState(() => {
+    const savedTab = localStorage.getItem('clockType');
+    return savedTab || 'digital';
   });
 
   useEffect(() => {
@@ -19,6 +25,10 @@ function App() {
     }
     localStorage.setItem('darkMode', darkMode);
   }, [darkMode]);
+
+  useEffect(() => {
+    localStorage.setItem('clockType', activeTab);
+  }, [activeTab]);
 
   const worldClocks = [
     { city: 'New York', timezone: 'America/New_York', offset: -5 },
@@ -39,14 +49,46 @@ function App() {
         <DarkModeToggle darkMode={darkMode} setDarkMode={setDarkMode} />
       </div>
 
+      <div className="tabs-container">
+        <button
+          className={`tab-button ${activeTab === 'digital' ? 'active' : ''}`}
+          onClick={() => setActiveTab('digital')}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <rect x="2" y="6" width="20" height="12" rx="2" />
+            <path d="M7 10h.01M11 10h.01M15 10h.01" strokeLinecap="round" />
+          </svg>
+          Digital
+        </button>
+        <button
+          className={`tab-button ${activeTab === 'analog' ? 'active' : ''}`}
+          onClick={() => setActiveTab('analog')}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 6v6l4 2" strokeLinecap="round" />
+          </svg>
+          Analog
+        </button>
+      </div>
+
       <div className="clock-grid">
         {worldClocks.map((clock, index) => (
-          <Clock
-            key={index}
-            city={clock.city}
-            timezone={clock.timezone}
-            offset={clock.offset}
-          />
+          activeTab === 'digital' ? (
+            <Clock
+              key={index}
+              city={clock.city}
+              timezone={clock.timezone}
+              offset={clock.offset}
+            />
+          ) : (
+            <AnalogClock
+              key={index}
+              city={clock.city}
+              timezone={clock.timezone}
+              offset={clock.offset}
+            />
+          )
         ))}
       </div>
     </div>
