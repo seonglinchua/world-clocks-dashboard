@@ -1,38 +1,317 @@
-.App {
-  text-align: center;
+/* =========================================
+   WORLD CLOCK DASHBOARD – NEZHA STYLE
+   ========================================= */
+
+/* ---------- Global ---------- */
+
+:root {
+  --bg-light-1: #eef2f7;
+  --bg-light-2: #f9fafb;
+
+  --bg-dark-1: #050814;
+  --bg-dark-2: #0c1324;
+  --bg-dark-3: #050814;
+
+  --card-light: #ffffff;
+  --card-dark: rgba(15, 22, 40, 0.96);
+
+  --text-main-light: #111827;
+  --text-sub-light: #6b7280;
+
+  --text-main-dark: #f9fafb;
+  --text-sub-dark: #9ca3af;
+
+  --accent-soft: rgba(129, 140, 248, 0.2);   /* soft indigo */
+  --border-subtle-light: rgba(15, 23, 42, 0.06);
+  --border-subtle-dark: rgba(148, 163, 184, 0.16);
+
+  --radius-card: 18px;
+  --shadow-card-light: 0 10px 30px rgba(15, 23, 42, 0.08),
+                       0 0 40px rgba(79, 70, 229, 0.04);
+  --shadow-card-dark: 0 12px 30px rgba(0, 0, 0, 0.55),
+                      0 0 40px rgba(37, 99, 235, 0.18);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Basic reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  color: var(--text-main-light);
+  min-height: 100vh;
 }
 
-.App-header {
-  background-color: #282c34;
+/* Root wrappers – adjust to match your HTML:
+   If you have <div class="app">...</div> then replace .world-clock-app with .app
+*/
+.world-clock-app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  padding: 40px 32px 48px;
+  animation: softMove 30s ease-in-out infinite alternate;
+  background-size: 350% 350%;
+}
+
+/* Light theme background */
+body.theme-light .world-clock-app {
+  background-image: linear-gradient(
+    135deg,
+    var(--bg-light-1) 0%,
+    var(--bg-light-2) 50%,
+    #eef2ff 100%
+  );
+}
+
+/* Dark theme background */
+body.theme-dark .world-clock-app {
+  background-image: radial-gradient(
+      circle at top,
+      #1e293b 0%,
+      var(--bg-dark-2) 35%,
+      var(--bg-dark-3) 80%
+    ),
+    radial-gradient(circle at bottom right, #111827 0%, #020617 70%);
+  color: var(--text-main-dark);
+}
+
+/* ---------- Header ---------- */
+
+.header {
+  max-width: 1120px;
+  width: 100%;
+  margin: 0 auto 32px auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.header-title {
+  font-size: clamp(28px, 3vw, 34px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+body.theme-light .header-title {
+  color: var(--text-main-light);
+}
+
+body.theme-dark .header-title {
+  color: var(--text-main-dark);
+}
+
+.header-subtitle {
+  font-size: 14px;
+  color: var(--text-sub-light);
+}
+
+body.theme-dark .header-subtitle {
+  color: var(--text-sub-dark);
+}
+
+/* Example style for your sun/moon theme toggle icon in top-right */
+.header-toggle {
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  border: 1px solid var(--border-subtle-light);
+  background: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  backdrop-filter: blur(20px);
+  transition: background 0.25s ease, transform 0.15s ease,
+    border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
-.App-link {
-  color: #61dafb;
+body.theme-dark .header-toggle {
+  background: rgba(15, 23, 42, 0.8);
+  border-color: rgba(148, 163, 184, 0.35);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.header-toggle:hover {
+  transform: translateY(-1px);
+}
+
+/* ---------- Grid Layout ---------- */
+
+.clock-grid {
+  max-width: 1120px;
+  width: 100%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+/* ---------- Clock Card ---------- */
+
+.clock-card {
+  position: relative;
+  padding: 20px 22px;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border-subtle-light);
+  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.95), var(--card-light));
+  box-shadow: var(--shadow-card-light);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 150px;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: cardRise 0.6s ease forwards;
+  overflow: hidden;
+}
+
+/* Subtle inner gradient overlay for a "glassy" feel */
+.clock-card::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(circle at top left, rgba(129, 140, 248, 0.08), transparent 60%);
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+/* Dark theme card adjustments */
+body.theme-dark .clock-card {
+  background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.98));
+  border-color: var(--border-subtle-dark);
+  box-shadow: var(--shadow-card-dark);
+}
+
+/* Staggered animation */
+.clock-card:nth-child(1) { animation-delay: 0.04s; }
+.clock-card:nth-child(2) { animation-delay: 0.08s; }
+.clock-card:nth-child(3) { animation-delay: 0.12s; }
+.clock-card:nth-child(4) { animation-delay: 0.16s; }
+.clock-card:nth-child(5) { animation-delay: 0.2s; }
+.clock-card:nth-child(6) { animation-delay: 0.24s; }
+
+/* ---------- Card Content ---------- */
+
+.clock-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.clock-city {
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+}
+
+.clock-region {
+  font-size: 12px;
+  color: var(--text-sub-light);
+}
+
+body.theme-dark .clock-region {
+  color: var(--text-sub-dark);
+}
+
+/* Optional small badge for timezone or type */
+.timezone-badge {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.04);
+  color: var(--text-sub-light);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+body.theme-dark .timezone-badge {
+  background: rgba(15, 23, 42, 0.7);
+  color: var(--text-sub-dark);
+}
+
+/* Time typography */
+.clock-time {
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  margin: 4px 0 2px;
+  line-height: 1.25;
+}
+
+body.theme-dark .clock-time {
+  text-shadow: 0 0 8px rgba(15, 23, 42, 0.8),
+    0 0 12px rgba(255, 255, 255, 0.16);
+}
+
+/* Date / meta text */
+.clock-date {
+  font-size: 12px;
+  color: var(--text-sub-light);
+}
+
+body.theme-dark .clock-date {
+  color: var(--text-sub-dark);
+}
+
+/* ---------- Utility: small footer text if needed ---------- */
+
+.footer-note {
+  margin-top: 32px;
+  font-size: 11px;
+  text-align: center;
+  color: var(--text-sub-light);
+}
+
+body.theme-dark .footer-note {
+  color: var(--text-sub-dark);
+}
+
+/* ---------- Animations ---------- */
+
+@keyframes softMove {
+  0% {
+    background-position: 0% 50%;
   }
-  to {
-    transform: rotate(360deg);
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes cardRise {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- Responsiveness ---------- */
+
+@media (max-width: 768px) {
+  .world-clock-app {
+    padding: 24px 16px 32px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
   }
 }

@@ -11,9 +11,11 @@ function App() {
 
   useEffect(() => {
     if (darkMode) {
-      document.documentElement.classList.add('dark');
+      document.body.classList.add('theme-dark');
+      document.body.classList.remove('theme-light');
     } else {
-      document.documentElement.classList.remove('dark');
+      document.body.classList.add('theme-light');
+      document.body.classList.remove('theme-dark');
     }
     localStorage.setItem('darkMode', darkMode);
   }, [darkMode]);
@@ -28,29 +30,24 @@ function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:bg-gradient-to-br dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950 transition-colors duration-300">
-      <DarkModeToggle darkMode={darkMode} setDarkMode={setDarkMode} />
-
-      <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12 py-16">
-        <header className="mb-16">
-          <h1 className="text-4xl font-light text-gray-900 dark:text-gray-100 mb-3 tracking-tight transition-colors duration-300">
-            World Clocks
-          </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 font-light transition-colors duration-300">
-            Real-time monitoring across time zones
-          </p>
-        </header>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {worldClocks.map((clock, index) => (
-            <Clock
-              key={index}
-              city={clock.city}
-              timezone={clock.timezone}
-              offset={clock.offset}
-            />
-          ))}
+    <div className="world-clock-app">
+      <div className="header">
+        <div className="header-titles">
+          <h1 className="header-title">World Clocks</h1>
+          <p className="header-subtitle">Real-time monitoring across time zones</p>
         </div>
+        <DarkModeToggle darkMode={darkMode} setDarkMode={setDarkMode} />
+      </div>
+
+      <div className="clock-grid">
+        {worldClocks.map((clock, index) => (
+          <Clock
+            key={index}
+            city={clock.city}
+            timezone={clock.timezone}
+            offset={clock.offset}
+          />
+        ))}
       </div>
     </div>
   );

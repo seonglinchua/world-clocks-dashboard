@@ -4,13 +4,14 @@ const DarkModeToggle = ({ darkMode, setDarkMode }) => {
   return (
     <button
       onClick={() => setDarkMode(!darkMode)}
-      className="fixed top-8 right-8 p-2 transition-all duration-300 hover:opacity-70 focus:outline-none focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-700 z-50"
+      className="header-toggle"
       aria-label="Toggle dark mode"
     >
       {darkMode ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5 text-gray-400"
+          width="18"
+          height="18"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -25,7 +26,8 @@ const DarkModeToggle = ({ darkMode, setDarkMode }) => {
       ) : (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5 text-gray-600"
+          width="18"
+          height="18"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
