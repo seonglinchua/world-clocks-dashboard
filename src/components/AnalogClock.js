@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const AnalogClock = ({ timezone, city, offset }) => {
+const AnalogClock = ({ timezone, city, offset, country, countryCode, lat, lon }) => {
   const [time, setTime] = useState(new Date());
 
   useEffect(() => {
@@ -26,6 +26,14 @@ const AnalogClock = ({ timezone, city, offset }) => {
     });
   };
 
+  // Generate static map URL using OpenStreetMap tiles
+  const getMapUrl = () => {
+    const zoom = 5;
+    const width = 300;
+    const height = 150;
+    return `https://staticmap.openstreetmap.de/staticmap.php?center=${lat},${lon}&zoom=${zoom}&size=${width}x${height}&maptype=mapnik`;
+  };
+
   const localTime = getTimeInTimezone();
   const hours = localTime.getHours() % 12;
   const minutes = localTime.getMinutes();
@@ -41,6 +49,16 @@ const AnalogClock = ({ timezone, city, offset }) => {
       <div className="analog-clock-header">
         <h2 className="clock-city">{city}</h2>
         <p className="clock-region">{timezone}</p>
+        <p className="clock-country">{country}</p>
+      </div>
+
+      <div className="map-snapshot-container analog-map">
+        <img
+          src={getMapUrl()}
+          alt={`Map of ${country}`}
+          className="map-snapshot"
+          loading="lazy"
+        />
       </div>
 
       <div className="analog-clock-container">
