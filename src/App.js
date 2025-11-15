@@ -28,7 +28,7 @@ function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950 transition-colors duration-300">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:bg-gradient-to-br dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950 transition-colors duration-300">
       <DarkModeToggle darkMode={darkMode} setDarkMode={setDarkMode} />
 
       <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12 py-16">
