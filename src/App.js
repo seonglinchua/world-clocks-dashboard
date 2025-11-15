@@ -31,12 +31,60 @@ function App() {
   }, [activeTab]);
 
   const worldClocks = [
-    { city: 'New York', timezone: 'America/New_York', offset: -5 },
-    { city: 'London', timezone: 'Europe/London', offset: 0 },
-    { city: 'Tokyo', timezone: 'Asia/Tokyo', offset: 9 },
-    { city: 'Sydney', timezone: 'Australia/Sydney', offset: 11 },
-    { city: 'Dubai', timezone: 'Asia/Dubai', offset: 4 },
-    { city: 'Los Angeles', timezone: 'America/Los_Angeles', offset: -8 },
+    {
+      city: 'New York',
+      timezone: 'America/New_York',
+      offset: -5,
+      country: 'United States',
+      countryCode: 'US',
+      lat: 40.7128,
+      lon: -74.0060
+    },
+    {
+      city: 'London',
+      timezone: 'Europe/London',
+      offset: 0,
+      country: 'United Kingdom',
+      countryCode: 'GB',
+      lat: 51.5074,
+      lon: -0.1278
+    },
+    {
+      city: 'Tokyo',
+      timezone: 'Asia/Tokyo',
+      offset: 9,
+      country: 'Japan',
+      countryCode: 'JP',
+      lat: 35.6762,
+      lon: 139.6503
+    },
+    {
+      city: 'Sydney',
+      timezone: 'Australia/Sydney',
+      offset: 11,
+      country: 'Australia',
+      countryCode: 'AU',
+      lat: -33.8688,
+      lon: 151.2093
+    },
+    {
+      city: 'Dubai',
+      timezone: 'Asia/Dubai',
+      offset: 4,
+      country: 'United Arab Emirates',
+      countryCode: 'AE',
+      lat: 25.2048,
+      lon: 55.2708
+    },
+    {
+      city: 'Los Angeles',
+      timezone: 'America/Los_Angeles',
+      offset: -8,
+      country: 'United States',
+      countryCode: 'US',
+      lat: 34.0522,
+      lon: -118.2437
+    },
   ];
 
   return (
@@ -80,6 +128,10 @@ function App() {
               city={clock.city}
               timezone={clock.timezone}
               offset={clock.offset}
+              country={clock.country}
+              countryCode={clock.countryCode}
+              lat={clock.lat}
+              lon={clock.lon}
             />
           ) : (
             <AnalogClock
@@ -87,6 +139,10 @@ function App() {
               city={clock.city}
               timezone={clock.timezone}
               offset={clock.offset}
+              country={clock.country}
+              countryCode={clock.countryCode}
+              lat={clock.lat}
+              lon={clock.lon}
             />
           )
         ))}
