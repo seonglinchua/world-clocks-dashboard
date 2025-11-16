@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const AnalogClock = ({ timezone, city, offset, country, countryCode, lat, lon }) => {
   const [time, setTime] = useState(new Date());
+  const [mapError, setMapError] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -26,13 +27,28 @@ const AnalogClock = ({ timezone, city, offset, country, countryCode, lat, lon })
     });
   };
 
-  // Generate static map URL using OpenStreetMap tiles
+  // Generate static map URL - using a tile-based approach for better compatibility
   const getMapUrl = () => {
     const zoom = 5;
-    const width = 300;
-    const height = 150;
-    return `https://staticmap.openstreetmap.de/staticmap.php?center=${lat},${lon}&zoom=${zoom}&size=${width}x${height}&maptype=mapnik`;
+    // Use OpenStreetMap tile server with better CORS support
+    const tileX = Math.floor((lon + 180) / 360 * Math.pow(2, zoom));
+    const tileY = Math.floor((1 - Math.log(Math.tan(lat * Math.PI / 180) + 1 / Math.cos(lat * Math.PI / 180)) / Math.PI) / 2 * Math.pow(2, zoom));
+    return `https://tile.openstreetmap.org/${zoom}/${tileX}/${tileY}.png`;
   };
+
+  // SVG fallback map
+  const renderMapFallback = () => (
+    <svg className="map-snapshot" viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg">
+      <rect width="300" height="150" fill="#e8f4f8"/>
+      <circle cx="150" cy="75" r="40" fill="#4a90e2" opacity="0.2"/>
+      <circle cx="150" cy="75" r="25" fill="#4a90e2" opacity="0.3"/>
+      <circle cx="150" cy="75" r="10" fill="#2e5c8a"/>
+      <path d="M 150 65 L 150 85 M 140 75 L 160 75" stroke="#1e3a5f" strokeWidth="2" strokeLinecap="round"/>
+      <text x="150" y="125" textAnchor="middle" fill="#2e5c8a" fontSize="12" fontFamily="system-ui">
+        {lat.toFixed(2)}°, {lon.toFixed(2)}°
+      </text>
+    </svg>
+  );
 
   const localTime = getTimeInTimezone();
   const hours = localTime.getHours() % 12;
@@ -53,12 +69,18 @@ const AnalogClock = ({ timezone, city, offset, country, countryCode, lat, lon })
       </div>
 
       <div className="map-snapshot-container analog-map">
-        <img
-          src={getMapUrl()}
-          alt={`Map of ${country}`}
-          className="map-snapshot"
-          loading="lazy"
-        />
+        {!mapError ? (
+          <img
+            src={getMapUrl()}
+            alt={`Map of ${country}`}
+            className="map-snapshot"
+            loading="lazy"
+            onError={() => setMapError(true)}
+            crossOrigin="anonymous"
+          />
+        ) : (
+          renderMapFallback()
+        )}
       </div>
 
       <div className="analog-clock-container">
